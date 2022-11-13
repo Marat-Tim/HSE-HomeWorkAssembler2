@@ -20,10 +20,11 @@ read:
 	mov	rax, QWORD PTR -32[rbp]
 	mov	DWORD PTR [rax], 0		# *size = 0;
 .L2:						# do {
-	mov	rax, QWORD PTR -40[rbp]		# 	ch = fgetc(stream);
-	mov	rdi, rax
-	call	fgetc@PLT
-	mov	DWORD PTR -4[rbp], eax
+
+	mov	rax, QWORD PTR -40[rbp]
+	mov	rdi, rax			# 	rdi - первый аргумент = stream
+	call	fgetc@PLT			# 	ch = fgetc(stream);
+	mov	DWORD PTR -4[rbp], eax		# 	функция отработала и вернула результат в eax и мы кладем его в ch
 	
 	mov	rax, QWORD PTR -32[rbp]		# 	str[(*size)++] = ch;
 	mov	eax, DWORD PTR [rax]
@@ -145,32 +146,32 @@ main:
 	mov	QWORD PTR -8[rbp], rax
 	xor	eax, eax
 	
-	mov	rdx, QWORD PTR stdin[rip]	# read(str, &size, stdin);
+	mov	rdx, QWORD PTR stdin[rip]	# rdx - третий аргумент = stdin
 	lea	rcx, -10072[rbp]
 	lea	rax, -10016[rbp]
-	mov	rsi, rcx
-	mov	rdi, rax
-	call	read
+	mov	rsi, rcx			# rsi - второй аргумент = &size
+	mov	rdi, rax			# rdi - первый аргумент = str
+	call	read				# read(str, &size, stdin);
 	
-	mov	ecx, DWORD PTR -10072[rbp]	# countNumbers(str, size, numbers_count);
-	lea	rdx, -10064[rbp]
+	mov	ecx, DWORD PTR -10072[rbp]
+	lea	rdx, -10064[rbp]		# rdx - третий аргумент = numbers_count
 	lea	rax, -10016[rbp]
-	mov	esi, ecx
-	mov	rdi, rax
-	call	countNumbers
+	mov	esi, ecx			# esi - второй аргумент = size
+	mov	rdi, rax			# rdi - первый аргумент = str
+	call	countNumbers			# countNumbers(str, size, numbers_count);
 	
 	mov	DWORD PTR -10068[rbp], 0	# for (i = 0; i < 10; ++i) {
 	jmp	.L8
 .L9:
-	mov	eax, DWORD PTR -10068[rbp]	# 	printf("Count of \"%d\": %d\n", i, numbers_count[i]);
-	cdqe
-	mov	edx, DWORD PTR -10064[rbp+rax*4]
 	mov	eax, DWORD PTR -10068[rbp]
-	mov	esi, eax
+	cdqe
+	mov	edx, DWORD PTR -10064[rbp+rax*4]#	edx - третий аргумент = numbers_count[i]
+	mov	eax, DWORD PTR -10068[rbp]
+	mov	esi, eax			# 	esi - второй аргумент = i
 	lea	rax, .LC0[rip]
-	mov	rdi, rax
+	mov	rdi, rax			# 	rdi - первый аргумент = "Count of \"%d\": %d\n"
 	mov	eax, 0
-	call	printf@PLT
+	call	printf@PLT			# 	printf("Count of \"%d\": %d\n", i, numbers_count[i]);
 	
 	add	DWORD PTR -10068[rbp], 1
 .L8:
