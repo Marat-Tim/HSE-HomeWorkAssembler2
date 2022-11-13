@@ -44,3 +44,5 @@
 
 # Задание на 7 баллов
 1. Создал папку "multi-module project". Разделил исходную программу на три части. Код main функции в файле [main.c](multi-module_project/main.c) на языке C, код функции read в файле [read.s](multi-module_project/read.s) на ассемблере и код функции countNumbers в файле [countNumbers.s](multi-module_project/countNumbers.s), тоже на ассемблере. С помощью команды ```gcc -c main.c read.s countNumbers.s``` превратил их в объектные файлы и далее командой ```gcc *.o -o "multi-module program.exe"``` получил исполняемый файл
+
+Не успел
