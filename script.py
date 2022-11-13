@@ -26,7 +26,7 @@ def main():
     programs_names = [filename for filename in os.listdir() if filename[-3:] == "exe"]
     programs_time = {key: [] for key in programs_names}
 
-    for _ in range(100):
+    for _ in range(1000):
         in_ = random_input_str()
         with open(in_path, 'w', encoding="ascii") as f:
             f.write(in_)
